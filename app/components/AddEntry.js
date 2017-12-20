@@ -1,5 +1,8 @@
 import React from 'react';
-import {getMetricMetaInfo, timeToString} from '../utils/helpers';
+import {connect} from 'react-redux';
+import {addEntry} from '../redux-core/actions/index';
+import {getDailyReminderValue, getMetricMetaInfo, timeToString} from '../utils/helpers';
+import {removeEntry, submitEntry} from '../utils/api';
 
 import {Text, TouchableOpacity, View} from 'react-native';
 import DateHeader from './DateHeader';
@@ -16,10 +19,15 @@ const SubmitBtn = ({onPress}) => {
   );
 };
 
+@connect(store => ({store}))
+
 class AddEntry extends React.Component {
+  dispatch = this.props.dispatch;
+  key = timeToString();
+
   state = {
     run: 0,
-    bike: 10,
+    bike: 0,
     swim: 0,
     sleep: 0,
     eat: 0,
@@ -56,9 +64,9 @@ class AddEntry extends React.Component {
   };
 
   submit = () => {
-    const key = timeToString();
     const entry = this.state;
 
+    this.dispatch(addEntry({[this.key]: entry}));
     this.setState({
       run: 0,
       bike: 0,
@@ -66,38 +74,36 @@ class AddEntry extends React.Component {
       sleep: 0,
       eat: 0,
     });
+    submitEntry({key: this.key, entry});
   };
 
   reset = () => {
-    const key = timeToString();
-
+    this.dispatch(addEntry({[this.key]: getDailyReminderValue()}));
+    removeEntry(this.key);
   };
 
   render() {
-    const metaInfo = getMetricMetaInfo();
+    console.log(this.props.store);
 
-    if (this.prop.alreadyLogged) {
+    const {store} = this.props;
+    const metaInfo = getMetricMetaInfo();
+    const alreadyLogged = store[this.key] && typeof store[this.key].today === 'undefined';
+
+    if (alreadyLogged) {
       return (
           <View>
             <Ionicons name={'ios-happy-outline'} size={100}/>
             <Text>You already logged your information for today.</Text>
+            <ResetBtn onPress={this.reset}>Reset.</ResetBtn>
           </View>
       );
-    } else {
-      return (
-          <View>
-            <Ionicons name={'ios-happy-outline'} size={100}/>
-            <Text>You already logged your information for today.</Text>
-            <ResetBtn onPress={this.reset}>
-              Reset
-            </ResetBtn>
-          </View>
-      )
     }
 
     return (
         <View>
           <DateHeader date={(new Date()).toLocaleDateString()}/>
+          <SubmitBtn onPress={this.submit}/>
+
           {Object.keys(metaInfo).map(key => {
             const {getIcon, type, ...rest} = metaInfo[key];
             const value = this.state[key];
@@ -119,7 +125,7 @@ class AddEntry extends React.Component {
                 </View>
             );
           })}
-          <SubmitBtn onPress={this.submit}/>
+
         </View>
     );
   };
