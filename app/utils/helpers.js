@@ -140,3 +140,9 @@ export function timeToString(time = Date.now()) {
       Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
   return todayUTC.toISOString().split('T')[0];
 }
+
+export function getDailyReminderValue() {
+  return {
+    today: '👋 Don\'t forget to log your data today!',
+  };
+}
