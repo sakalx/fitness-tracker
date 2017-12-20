@@ -1,48 +1,54 @@
 import React from 'react';
+import {Provider} from 'react-redux';
+import store from './app/redux-core/store';
+
 import {StyleSheet, Text, View} from 'react-native';
-//import styled from 'styled-components/native';
-
-export default class App extends React.Component {
-
-  componentDidMount() {
-    console.log('good');
-
-    console.log('bad28');
-  }
-
-  render() {
-    console.log([2, 4, 5, 6]);
-    console.log([
-      {
-        id: 4,
-        test: 'fsfsffsf',
-      },
-      {
-        id: 5,
-        test: 'fsfsffsf',
-      },
-      {
-        id: 6,
-        test: 'fsfsffsf',
-      }]);
-    console.log({faf: 'faefewaf', nume: 34,});
-
-    return (
-        <View style={styles.container}>
-          <Text>Open up App.js to start working on your app!!</Text>
-          <Text>Changes you make will automatically reload.</Text>
-          <Text>Shake your phone to open the developer menu.</Text>
-          <Text>SaklS .</Text>
-        </View>
-    );
-  }
-};
+import styled from 'styled-components/native';
+import AddEntry from './app/components/AddEntry';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'gold',
     alignItems: 'center',
     justifyContent: 'center',
   },
 });
+const Container = styled.View`
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  align-items: center;
+  background-color: gold;
+  justify-content: center;
+`;
+
+class App extends React.Component {
+  state = {fontsAreLoaded: false};
+
+  async componentWillMount() {
+    await Expo.Font.loadAsync({
+      'Roboto': require('native-base/Fonts/Roboto.ttf'),
+      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+    });
+    this.setState({fontsAreLoaded: true});
+  }
+
+  render() {
+    if (!this.state.fontsAreLoaded) {
+      return <Text>Spiner . . . . almost done</Text>;
+    } else {
+      return (
+          <Provider store={store}>
+            <View>
+              <AddEntry/>
+            </View>
+          </Provider>
+      );
+    }
+  }
+}
+
+export default App;
+
+// <Entypo name='app-store' color='grey' size={100}/>
