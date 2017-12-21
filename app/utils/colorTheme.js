@@ -1,20 +1,4 @@
-export const colorTheme = {
-  accent1Color: '#ff4081',
-  accent2Color: '#f50057',
-  accent3Color: '#ff80ab',
-  alternateTextColor: '#303030',
-  borderColor: 'rgba(255, 255, 255, 0.3)',
-  canvasColor: '#303030',
-  clockCircleColor: 'rgba(255, 255, 255, 0.12)',
-  disabledColor: 'rgba(255, 255, 255, 0.3)',
-  pickerHeaderColor: 'rgba(255, 255, 255, 0.12)',
-  primary1Color: '#2793e8',
-  primary2Color: '#0097a7',
-  primary3Color: '#757575',
-  secondaryTextColor: 'rgba(255, 255, 255, 0.7)',
-  textColor: 'rgba(255, 255, 255, 1)',
-  warningColor: '#F44336',
-
+const colorTheme = {
   purple: '#292477',
   gray: '#757575',
   white: '#fff',
@@ -25,3 +9,5 @@ export const colorTheme = {
   pink: '#b93fb3',
   black: '#000',
 };
+
+export default colorTheme;

@@ -2,26 +2,8 @@ import React from 'react';
 import {Provider} from 'react-redux';
 import store from './app/redux-core/store';
 
-import {StyleSheet, Text, View} from 'react-native';
-import styled from 'styled-components/native';
-import AddEntry from './app/components/AddEntry';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'gold',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
-const Container = styled.View`
-  display: flex;
-  flex-direction: row;
-  height: 100%;
-  align-items: center;
-  background-color: gold;
-  justify-content: center;
-`;
+import {ScrollView, Text} from 'react-native';
+import History from './app/components/History';
 
 class App extends React.Component {
   state = {fontsAreLoaded: false};
@@ -40,9 +22,9 @@ class App extends React.Component {
     } else {
       return (
           <Provider store={store}>
-            <View>
-              <AddEntry/>
-            </View>
+            <ScrollView contentContainerStyle={{flex: 1}}>
+              <History/>
+            </ScrollView>
           </Provider>
       );
     }

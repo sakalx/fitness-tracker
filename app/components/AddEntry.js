@@ -1,26 +1,65 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import styled from 'styled-components/native';
+import colorTheme from '../utils/colorTheme';
 import {addEntry} from '../redux-core/actions/index';
 import {getDailyReminderValue, getMetricMetaInfo, timeToString} from '../utils/helpers';
 import {removeEntry, submitEntry} from '../utils/api';
 
-import {Text, TouchableOpacity, View} from 'react-native';
+import {Platform, Text, TouchableOpacity, View} from 'react-native';
 import DateHeader from './DateHeader';
 import Slider from './Slider';
 import Stepper from './Steppers';
-import ResetBtn from './ResetBt';
+import TextBtn from './TextBtn';
 import {Ionicons} from '@expo/vector-icons';
 
+const Wrap = styled(View)`
+  flex: 1;
+  background-color: ${colorTheme.white};
+  padding: 20px;
+`;
+const WrapRow = styled(View)`
+  flex: 1;
+  flexDirection: row;    
+  alignItems: center;
+`;
+const WrapCenter = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
+const IosSubmitBtn = styled(TouchableOpacity)`
+  background-color: ${colorTheme.purple};
+  padding: 10px;
+  borderRadius: 7px;
+  height: 45px;
+  margin: 0 40px;
+`;
+const AndroidSubmitBtn = styled(TouchableOpacity)`
+  background-color: ${colorTheme.purple};
+  padding: 10px 30px;
+  height: 45px;
+  border-radius: 2px;
+  align-self: flex-end;
+  justify-content: center;
+  align-items: center;
+`;
+const SubmitBtnText = styled(Text)`
+  color: ${colorTheme.white};
+  fontSize: 22;
+  text-align: center;
+`;
+
 const SubmitBtn = ({onPress}) => {
+  const SubmitBtn = Platform.OS === 'ios' ? IosSubmitBtn : AndroidSubmitBtn;
   return (
-      <TouchableOpacity onPress={onPress}>
-        <Text>Submit</Text>
-      </TouchableOpacity>
+      <SubmitBtn onPress={onPress}>
+        <SubmitBtnText>Submit</SubmitBtnText>
+      </SubmitBtn>
   );
 };
 
 @connect(store => ({store}))
-
 class AddEntry extends React.Component {
   dispatch = this.props.dispatch;
   key = timeToString();
@@ -83,33 +122,32 @@ class AddEntry extends React.Component {
   };
 
   render() {
-    console.log(this.props.store);
-
     const {store} = this.props;
     const metaInfo = getMetricMetaInfo();
     const alreadyLogged = store[this.key] && typeof store[this.key].today === 'undefined';
 
     if (alreadyLogged) {
       return (
-          <View>
-            <Ionicons name={'ios-happy-outline'} size={100}/>
-            <Text>You already logged your information for today.</Text>
-            <ResetBtn onPress={this.reset}>Reset.</ResetBtn>
-          </View>
+          <WrapCenter>
+            <Ionicons name={Platform.OS === 'ios' ? 'ios-happy-outline' : 'md-happy'}
+                      size={100}/>
+            <Text style={{textAlign: 'center'}}>
+              You already logged your information for today.
+            </Text>
+            <TextBtn onPress={this.reset}>Reset.</TextBtn>
+          </WrapCenter>
       );
     }
 
     return (
-        <View>
+        <Wrap>
           <DateHeader date={(new Date()).toLocaleDateString()}/>
-          <SubmitBtn onPress={this.submit}/>
-
           {Object.keys(metaInfo).map(key => {
             const {getIcon, type, ...rest} = metaInfo[key];
             const value = this.state[key];
 
             return (
-                <View key={key}>
+                <WrapRow key={key}>
                   {getIcon()}
                   {type === 'slider'
                       ? <Slider value={value}
@@ -122,11 +160,11 @@ class AddEntry extends React.Component {
                                  {...rest}
                       />
                   }
-                </View>
+                </WrapRow>
             );
           })}
-
-        </View>
+          <SubmitBtn onPress={this.submit}/>
+        </Wrap>
     );
   };
 }

@@ -1,7 +1,19 @@
 import React from 'react';
 import {View} from 'react-native';
+import styled from 'styled-components/native';
+import colorTheme from './colorTheme';
+
 import {FontAwesome, MaterialCommunityIcons, MaterialIcons} from '@expo/vector-icons';
-import {colorTheme} from './colorTheme';
+
+const IconLayout = styled(View)`
+  width: 50px;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  margin-right: 20px;
+  padding: 5px;
+`;
 
 export function getMetricMetaInfo(metric) {
   const info = {
@@ -13,13 +25,13 @@ export function getMetricMetaInfo(metric) {
       type: 'steppers',
       getIcon() {
         return (
-            <View>
+            <IconLayout style={{backgroundColor: colorTheme.red}}>
               <MaterialIcons
                   name='directions-run'
-                  color={colorTheme.black}
+                  color={colorTheme.white}
                   size={35}
               />
-            </View>
+            </IconLayout>
         );
       },
     },
@@ -31,13 +43,13 @@ export function getMetricMetaInfo(metric) {
       type: 'steppers',
       getIcon() {
         return (
-            <View>
+            <IconLayout style={{backgroundColor: colorTheme.orange}}>
               <MaterialCommunityIcons
                   name='bike'
-                  color={colorTheme.black}
+                  color={colorTheme.white}
                   size={32}
               />
-            </View>
+            </IconLayout>
         );
       },
     },
@@ -49,13 +61,13 @@ export function getMetricMetaInfo(metric) {
       type: 'steppers',
       getIcon() {
         return (
-            <View>
+            <IconLayout style={{backgroundColor: colorTheme.blue}}>
               <MaterialCommunityIcons
                   name='swim'
-                  color={colorTheme.black}
+                  color={colorTheme.white}
                   size={35}
               />
-            </View>
+            </IconLayout>
         );
       },
     },
@@ -67,13 +79,13 @@ export function getMetricMetaInfo(metric) {
       type: 'slider',
       getIcon() {
         return (
-            <View>
+            <IconLayout style={{backgroundColor: colorTheme.lightPurp}}>
               <FontAwesome
                   name='bed'
-                  color={colorTheme.black}
+                  color={colorTheme.white}
                   size={30}
               />
-            </View>
+            </IconLayout>
         );
       },
     },
@@ -85,13 +97,13 @@ export function getMetricMetaInfo(metric) {
       type: 'slider',
       getIcon() {
         return (
-            <View>
+            <IconLayout style={{backgroundColor: colorTheme.pink}}>
               <MaterialCommunityIcons
                   name='food'
-                  color={colorTheme.black}
+                  color={colorTheme.white}
                   size={35}
               />
-            </View>
+            </IconLayout>
         );
       },
     },
