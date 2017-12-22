@@ -1,9 +1,61 @@
 import React from 'react';
 import {Provider} from 'react-redux';
+import {Constants} from 'expo';
+import {TabNavigator} from 'react-navigation';
 import store from './app/redux-core/store';
+import colorTheme from './app/utils/colorTheme';
 
-import {ScrollView, Text} from 'react-native';
+import {Platform, ScrollView, StatusBar, Text, View} from 'react-native';
+import {Ionicons} from '@expo/vector-icons';
 import History from './app/components/History';
+import AddEntry from './app/components/AddEntry';
+
+const FitnessStatusBar = ({backgroundColor, ...props}) => {
+  return (
+      <View style={{backgroundColor, height: Constants.statusBarHeight}}>
+        <StatusBar translucent backgroundColor={backgroundColor} {...props} />
+      </View>
+  );
+};
+
+const Tabs = TabNavigator({
+  History: {
+    screen: History,
+    navigationOptions: {
+      tabBarLabel: 'History',
+      tabBarIcon: ({tintColor}) => <Ionicons name='ios-bookmarks'
+                                             size={30}
+                                             color={tintColor}/>,
+    },
+  },
+  AddEntry: {
+    screen: AddEntry,
+    navigationOptions: {
+      tabBarLabel: 'Add Entry',
+      tabBarIcon: ({tintColor}) => <Ionicons name='plus-squar'
+                                             size={30}
+                                             color={tintColor}/>,
+    },
+  },
+}, {
+  tabBarOptions: {
+    navigationOptions: {
+      header: null,
+    },
+    activeTintColor: Platform.OS === 'ios' ? colorTheme.purple : colorTheme.white,
+    style: {
+      height: 56,
+      backgroundColor: Platform.OS === 'ios' ? colorTheme.white : colorTheme.purple,
+      shadowColor: 'rgba(0, 0, 0, 0.24)',
+      shadowOffset: {
+        width: 0,
+        height: 3,
+      },
+      shadowRadius: 6,
+      shadowOpacity: 1,
+    },
+  },
+});
 
 class App extends React.Component {
   state = {fontsAreLoaded: false};
@@ -23,7 +75,10 @@ class App extends React.Component {
       return (
           <Provider store={store}>
             <ScrollView contentContainerStyle={{flex: 1}}>
-              <History/>
+              <FitnessStatusBar backgroundColor={colorTheme.purple}
+                                barStyle="light-content"
+              />
+              <Tabs/>
             </ScrollView>
           </Provider>
       );
@@ -32,5 +87,3 @@ class App extends React.Component {
 }
 
 export default App;
-
-// <Entypo name='app-store' color='grey' size={100}/>
