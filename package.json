@@ -27,8 +27,10 @@
     "native-base": "^2.3.5",
     "react": "16.0.0",
     "react-native": "0.50.3",
+    "react-navigation": "^1.0.0-beta.22",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
-    "styled-components": "^2.3.0"
+    "styled-components": "^2.3.0",
+    "udacifitness-calendar": "^11.0.0"
   }
 }
