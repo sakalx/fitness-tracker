@@ -5,6 +5,7 @@ import colorTheme from '../utils/colorTheme';
 import {addEntry} from '../redux-core/actions/index';
 import {getDailyReminderValue, getMetricMetaInfo, timeToString} from '../utils/helpers';
 import {removeEntry, submitEntry} from '../utils/api';
+import {NavigationActions} from 'react-navigation';
 
 import {Platform, Text, TouchableOpacity, View} from 'react-native';
 import DateHeader from './DateHeader';
@@ -113,13 +114,17 @@ class AddEntry extends React.Component {
       sleep: 0,
       eat: 0,
     });
+    this.toHome();
     submitEntry({key: this.key, entry});
   };
 
   reset = () => {
     this.dispatch(addEntry({[this.key]: getDailyReminderValue()}));
+    this.toHome();
     removeEntry(this.key);
   };
+  toHome = () =>
+  this.props.navigation.dispatch(NavigationActions.back({key: 'AddEntry'}));
 
   render() {
     const {store} = this.props;
