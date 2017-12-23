@@ -1,7 +1,7 @@
 import React from 'react';
 import {Provider} from 'react-redux';
 import {Constants} from 'expo';
-import {TabNavigator} from 'react-navigation';
+import {StackNavigator, TabNavigator} from 'react-navigation';
 import store from './app/redux-core/store';
 import colorTheme from './app/utils/colorTheme';
 
@@ -9,6 +9,8 @@ import {Platform, ScrollView, StatusBar, Text, View} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import History from './app/components/History';
 import AddEntry from './app/components/AddEntry';
+import EntryDetail from './app/components/EntryDetail';
+import Live from './app/components/Live';
 
 const FitnessStatusBar = ({backgroundColor, ...props}) => {
   return (
@@ -37,6 +39,15 @@ const Tabs = TabNavigator({
                                              color={tintColor}/>,
     },
   },
+  Live: {
+    screen: Live,
+    navigationOptions: {
+      tabBarLabel: 'Live',
+      tabBarIcon: ({tintColor}) => <Ionicons name='ios-speedometer'
+                                             size={30}
+                                             color={tintColor}/>,
+    },
+  },
 }, {
   tabBarOptions: {
     navigationOptions: {
@@ -44,7 +55,6 @@ const Tabs = TabNavigator({
     },
     activeTintColor: Platform.OS === 'ios' ? colorTheme.purple : colorTheme.white,
     style: {
-      height: 56,
       backgroundColor: Platform.OS === 'ios' ? colorTheme.white : colorTheme.purple,
       shadowColor: 'rgba(0, 0, 0, 0.24)',
       shadowOffset: {
@@ -53,6 +63,21 @@ const Tabs = TabNavigator({
       },
       shadowRadius: 6,
       shadowOpacity: 1,
+    },
+  },
+});
+
+const MainNavigator = StackNavigator({
+  Home: {
+    screen: Tabs,
+  },
+  EntryDetail: {
+    screen: EntryDetail,
+    navigationOptions: {
+      headerTintColor: colorTheme.white,
+      headerStyle: {
+        backgroundColor: colorTheme.purple,
+      },
     },
   },
 });
@@ -78,7 +103,7 @@ class App extends React.Component {
               <FitnessStatusBar backgroundColor={colorTheme.purple}
                                 barStyle="light-content"
               />
-              <Tabs/>
+              <MainNavigator/>
             </ScrollView>
           </Provider>
       );
