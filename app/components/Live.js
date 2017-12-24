@@ -3,9 +3,10 @@ import styled, {css} from 'styled-components/native';
 import colorTheme from '../utils/colorTheme';
 import {Location, Permissions} from 'expo';
 import {calculateDirection} from '../utils/helpers';
+import transition from '../utils/anime-transition';
 
 import {Foundation} from '@expo/vector-icons';
-import {ActivityIndicator, Animated, Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Text, TouchableOpacity, View} from 'react-native';
 
 const Wrap = styled(View)`
   flex: 1;
@@ -69,7 +70,7 @@ class Live extends React.Component {
     coords: {},
     status: null,
     direction: '',
-    bounceValue: new Animated.Value(1),
+    scaling: 1,
   };
 
   componentDidMount() {
@@ -81,20 +82,17 @@ class Live extends React.Component {
       this.setState(() => ({status}));
     }).catch((error) => {
       console.warn('Error getting Location permission: ', error);
-
       this.setState(() => ({status: 'undetermined'}));
     });
   }
 
   askPermission = () => {
-    Permissions.askAsync(Permissions.LOCATION)
-    .then((status) => {
+    Permissions.askAsync(Permissions.LOCATION).then((status) => {
       if (status === 'granted') {
-        return this.setLocation()
+        return this.setLocation();
       }
-      this.setState(() => ({ status }))
-    })
-    .catch((error) => console.warn('error asking Location permission: ', error))
+      this.setState(() => ({status}));
+    }).catch((error) => console.warn('error asking Location permission: ', error));
   };
 
   setLocation = () => {
@@ -104,13 +102,10 @@ class Live extends React.Component {
       distanceInterval: 1,
     }, ({coords}) => {
       const newDirection = calculateDirection(coords.heading);
-      const {direction, bounceValue} = this.state;
 
-      if (newDirection === direction) {
-        Animated.sequence([
-            Animated.timing(bounceValue, {duration: 200, toValue: 1.04}),
-            Animated.spring(bounceValue, {toValue:1, friction: 4})
-        ]).start()
+      if (newDirection !== this.state.direction) {
+        const animationScale = value => this.setState({scaling: value});
+        transition(animationScale, {from: 1, to: 0.1, back: true,});
       }
 
       this.setState(() => ({
@@ -122,7 +117,7 @@ class Live extends React.Component {
   };
 
   render() {
-    const {status, coords, direction, bounceValue } = this.state;
+    const {status, coords, direction, scaling} = this.state;
 
     if (status === null) {
       return <ActivityIndicator style={{marginTop: 30}}/>;
@@ -130,7 +125,7 @@ class Live extends React.Component {
     if (status === 'denied') {
       return (
           <CenterWrap>
-            <Foundation name='alert' size={50} />
+            <Foundation name='alert' size={50}/>
             <SubHeader>
               You denied your location.
               You can fix this by visiting your settings
@@ -158,9 +153,9 @@ class Live extends React.Component {
         <Wrap>
           <DirectionContainer>
             <Header>You're heading</Header>
-            <Direction scale="0.2">
+            <Direction scale={scaling}>
               {direction}
-              </Direction>
+            </Direction>
           </DirectionContainer>
           <MetricContainer>
             <Metric>
