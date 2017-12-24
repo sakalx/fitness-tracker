@@ -3,6 +3,7 @@ import {Provider} from 'react-redux';
 import {Constants} from 'expo';
 import {StackNavigator, TabNavigator} from 'react-navigation';
 import store from './app/redux-core/store';
+import {setLocalNotification} from './app/utils/helpers';
 import colorTheme from './app/utils/colorTheme';
 
 import {Platform, ScrollView, StatusBar, Text, View} from 'react-native';
@@ -84,6 +85,10 @@ const MainNavigator = StackNavigator({
 
 class App extends React.Component {
   state = {fontsAreLoaded: false};
+
+  componentDidMount() {
+    setLocalNotification()
+  }
 
   async componentWillMount() {
     await Expo.Font.loadAsync({

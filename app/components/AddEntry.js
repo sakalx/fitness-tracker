@@ -3,7 +3,13 @@ import {connect} from 'react-redux';
 import styled from 'styled-components/native';
 import colorTheme from '../utils/colorTheme';
 import {addEntry} from '../redux-core/actions/index';
-import {getDailyReminderValue, getMetricMetaInfo, timeToString} from '../utils/helpers';
+import {
+  clearLocalNotification,
+  getDailyReminderValue,
+  getMetricMetaInfo,
+  setLocalNotification,
+  timeToString
+} from '../utils/helpers';
 import {removeEntry, submitEntry} from '../utils/api';
 import {NavigationActions} from 'react-navigation';
 
@@ -116,6 +122,9 @@ class AddEntry extends React.Component {
     });
     this.toHome();
     submitEntry({key: this.key, entry});
+
+    clearLocalNotification()
+        .then(setLocalNotification)
   };
 
   reset = () => {
